@@ -19,37 +19,45 @@
   (let [board [[:x :o :x]
                [:o :x :o]
                [:o :x :x]]
-        winner (check-winner board)]
-    (is (= :x winner))))
+        w (winner board)]
+    (is (= :x w))))
 
 (deftest diagonal-test-2
   (test "diagonal-2")
   (let [board [[nil nil :x]
                [nil :x nil]
                [:x nil nil]]
-        winner (check-winner board)]
-    (is (= :x winner))))
+        w (winner board)]
+    (is (= :x w))))
 
 (deftest horizontal-test
   (testing "horizontal")
   (let [board [[:o :o :o]
                [:o :x :x]
                [nil :x :x]]
-        winner (check-winner board)]
-    (is (= :o winner))))
+        w (winner board)]
+    (is (= :o w))))
 
 (deftest vertical-test
   (testing "vertical")
   (let [board [[:o :x :o]
                [:o :x :x]
                [:o :o :x]]
-        winner (check-winner board)]
-    (is (= :o winner))))
+        w (winner board)]
+    (is (= :o w))))
 
 (deftest draw-test
   (testing "draw")
   (let [board [[:x :x :o]
                [:o :o :x]
                [:x :x :o]]
-        winner (check-winner board)]
-    (is (= nil winner))))
+        w (winner board)]
+    (is (= :draw w))))
+
+(deftest invalid-length-test
+  (testing "invalid length")
+  (let [board [[:x nil :o]
+               [:x :o nil]
+               [:o nil]]
+        w (winner board)]
+    (is (= nil w))))

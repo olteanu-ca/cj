@@ -14,8 +14,8 @@
       nil)))
 
 (defn check-winner [board]
-  ;(some some? (map forms-line board))
-      ;(some some? (map forms-line (apply map vector board)))))
+  (assert (= 3 (count board)))
+  (doall (map (fn [line] (assert (= 3 (count line)))) board))
   (first (filter some? (concat
                         (map forms-line board)
                         (map forms-line (apply map vector board))
@@ -24,6 +24,16 @@
                         [(forms-line
                              (map (fn [idx] (nth (nth board idx) (- 2 idx))) (range 3)))]))))
 
+
+(defn winner [board]
+  "Takes a 3-length vector of 3-length vectors of :x, :o, and nil representing a
+  tic-tac-toe board. Returns the winner (:o or :x) if there is one or :draw"
+  (try
+    (let [w (check-winner board)]
+      (if (= nil w)
+        :draw
+        w))
+    (catch java.lang.AssertionError ex nil)))
 
 (defn -main
   "I don't do a whole lot ... yet."
