@@ -1,21 +1,14 @@
-(ns costin.myapp-test
+(ns costin.tictactoe-test
   (:require [clojure.test :refer :all]
-            [costin.myapp :refer :all]))
+            [costin.tictactoe :refer :all]))
 
 (deftest form-line-t
+  (testing "Test for form-line")
   (let [x (forms-line (seq [:o :o :o]))]
     (is (= x :o))))
 
-(deftest form-line-diagonal
-  (let [board
-        [[:x :o :x]
-         [:o :x :o]
-         [:x :o :o]]
-        line (map (fn [idx] (nth (nth board idx) (- 2 idx))) (range 3))]
-    (is (= :x (forms-line line)))))
-
 (deftest diagonal-test
-  (testing "diagonal")
+  (testing "Diagonal top left - bottom right")
   (let [board [[:x :o :x]
                [:o :x :o]
                [:o :x :x]]
@@ -23,15 +16,15 @@
     (is (= :x w))))
 
 (deftest diagonal-test-2
-  (test "diagonal-2")
-  (let [board [[nil nil :x]
-               [nil :x nil]
-               [:x nil nil]]
+  (test "Diagonal bottom left - top righ")
+  (let [board [[:x :o :x]
+               [:o :x :o]
+               [:x :o :o]]
         w (winner board)]
     (is (= :x w))))
 
 (deftest horizontal-test
-  (testing "horizontal")
+  (testing "Horizontal")
   (let [board [[:o :o :o]
                [:o :x :x]
                [nil :x :x]]
@@ -39,7 +32,7 @@
     (is (= :o w))))
 
 (deftest vertical-test
-  (testing "vertical")
+  (testing "Vertical")
   (let [board [[:o :x :o]
                [:o :x :x]
                [:o :o :x]]
@@ -47,7 +40,7 @@
     (is (= :o w))))
 
 (deftest draw-test
-  (testing "draw")
+  (testing "No winner")
   (let [board [[:x :x :o]
                [:o :o :x]
                [:x :x :o]]
@@ -55,7 +48,7 @@
     (is (= :draw w))))
 
 (deftest invalid-length-test
-  (testing "invalid length")
+  (testing "Invalid input test")
   (let [board [[:x nil :o]
                [:x :o nil]
                [:o nil]]
