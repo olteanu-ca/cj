@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# format only modified files
+
+bin_dir=$(dirname $(readlink -f $0))
+project_dir=$(dirname "$bin_dir")
+staged_files=`git --no-pager diff --name-only`
+
+sspfiles="${staged_files//$'\n'/ }"
+IFS=' '
+
+read -a strarr <<< "$sspfiles"
+
+cd "$project_dir"
+for file in "${strarr[@]}";
+do
+    if [[ $file =~ .*\.(clj[sc]?|edn) ]]
+       then
+           printf "formating $file\n"
+           clojure -M:format fix "$file"
+       fi
+done
+
+
