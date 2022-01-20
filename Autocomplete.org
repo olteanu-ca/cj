@@ -1,0 +1,22 @@
+
+* Autocomplete
+
+I always liked flexible autocomplete where you can type a few letters, even skipping some letters, and it can find the file or word for you.
+
+Your task is to write a function that determines if you can complete a sequence of characters to a given string.
+
+Examples
+#+begin_src clojure
+(completes? "a" "autocomplete") ;=> true
+(completes? "atc" "autocomplete") ;=> true
+(completes? "hello" "hello") ;=> true
+(completes? "ll" "hello") ;=> true
+(completes? "llh" "hello") ;=> false
+#+end_src
+
+The rules. The function returns true if all of the following are true (otherwise false):
+
+    - The first string contains only letters in the second string.
+    - The first string’s letters are in the same order as in the second string.
+
+Note that this means that you can match any number of letters between typed letters.
