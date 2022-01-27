@@ -1,0 +1,10 @@
+* Tasks Order
+
+ O problema practica in care primesti doar story si tu trebuie sa faci intreaga analiza si implementare:
+ - proiectarea modelului de date
+ - use-cases si analiza procesului
+ - implementarea propriu-zisa
+
+** Story
+
+Ai o lista neordonata de taskuri. Fiecare task poate sa fie independent sau poate sa depinda de alte task-uri din lista. Creaza un Software Unit care sa ordoneze task-urile pentru executie.
