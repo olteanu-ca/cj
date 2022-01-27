@@ -1,6 +1,7 @@
 (ns costin.backspace
   (:gen-class)
   (:require
+    [clojure.spec.alpha :as spec]
     [clojure.string :as string]))
 
 
@@ -18,6 +19,8 @@
   for backspace. Returns the input if backspace removes the previous character
   in the input"
   [user-input]
+  {:pre [(spec/valid? string? user-input)]
+   :post [(spec/valid? string? %)]}
   (let [s (seq user-input)]
     (reduce
       (fn [acc

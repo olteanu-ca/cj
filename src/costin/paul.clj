@@ -1,6 +1,7 @@
 (ns costin.paul
   (:gen-class)
   (:require
+    [clojure.spec.alpha :as spec]
     [clojure.string :as string]))
 
 
@@ -16,8 +17,8 @@
     (between (int \A) (int c) (int \Z)) c
     ; input = \a + x
     ; x = input - \a
-    ; result = \A + x
     ; result = \A + input - \a
+    ; result = \A + x
     (between (int \a) (int c) (int \z)) (char (+ (int c) (- (int \A) (int \a))))))
 
 
@@ -33,13 +34,13 @@
 (defn decode-letter
   "Decodes invidual letters with Paul cypher"
   [previous-letter next-letter]
+  {:post [(spec/valid? (fn [result] (= next-letter (encode-letter previous-letter result))) %)]}
   ; forall prev,
   ; enc(next) = 1 + (prev - A) + next
   ; x = 1 + (prev - A) + next
   ; x - 1 - (prev - A) = next
   ; dec(next) = next - 1 - prev + A
   (let [e (- (+ (int next-letter) (int \A)) 1 (int previous-letter))]
-    (println (format "prev %s next %s result %s" previous-letter next-letter e))
     (char
       (if (>= e (int \A))
         e
