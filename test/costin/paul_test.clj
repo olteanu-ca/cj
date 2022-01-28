@@ -11,8 +11,9 @@
     (is (= result ""))))
 
 (deftest letter-encode
-  (testing "Encoding single letter")
+  (testing "Encoding random letter")
   ; uses the :post condition of decode-letter
+  ; not sure if sampling would be better to run many tests at once
   (let [g (spec/gen (spec/and char? #(between (int \A) (int %) (int \Z))))]
     (decode-letter (genspec/generate g) (genspec/generate g))))
 
@@ -42,3 +43,9 @@
   (testing "Decoding string")
   (let [hello-result (decode "HMQXA")]
     (is (= hello-result "HELLO"))))
+
+(deftest random-text-decode
+  (testing "Encoding random text")
+  ; uses the :post condition of decode
+  (let [g (spec/gen string?)]
+    (decode (genspec/generate g))))

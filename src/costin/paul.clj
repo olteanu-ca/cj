@@ -21,6 +21,16 @@
     ; result = \A + x
     (between (int \a) (int c) (int \z)) (char (+ (int c) (- (int \A) (int \a))))))
 
+(defn normalize-string [s]
+  (reduce
+   (fn [acc next]
+     (string/join
+      [acc
+       (if-let [normalized-next (normalize-character next)]
+         normalized-next
+         next)]))
+   "" (seq s)))
+
 
 (defn encode-letter
   "Encodes individual letters with Paul cypher. Takes the previous letter and
@@ -76,6 +86,7 @@
 (defn decode
   "Decodes the input with the Paul cypher"
   [input]
+    {:post [(spec/valid? (fn [result] (= (normalize-string input) (encode result))) %)]}
   (let [s (seq input)]
     (nth
       (reduce (fn [[previous-letter acc]
