@@ -1,6 +1,9 @@
 (ns costin.paul-test
-  (:require [clojure.test :refer :all]
-            [costin.paul :refer :all]))
+  (:require
+   [clojure.spec.alpha :as spec]
+   [clojure.spec.gen.alpha :as genspec]
+   [clojure.test :refer :all]
+   [costin.paul :refer :all]))
 
 (deftest blank-encode
   (testing "Encoding nothing")
@@ -9,8 +12,9 @@
 
 (deftest letter-encode
   (testing "Encoding single letter")
-  (let [result (encode "a")]
-    (is (= result "A"))))
+  ; uses the :post condition of decode-letter
+  (let [g (spec/gen (spec/and char? #(between (int \A) (int %) (int \Z))))]
+    (decode-letter (genspec/generate g) (genspec/generate g))))
 
 (deftest string-encode
   (testing "Encoding string")
