@@ -17,19 +17,17 @@
   (:gen-class)
   (:require
     [clojure.set :as set]
-    [clojure.spec.alpha :as spec]
-    [clojure.spec.test.alpha :as stest]))
+    [clojure.spec.alpha :as spec]))
 
 
 (defn order-tasks
   "forall 'a type,
-  tasks : #{'a} all the tasks we have
   relations : {'a #('a)} the key, representing a task, depends on all the given values
   if successful, return [#{'a}] a list of how the tasks should be run; first run all
   tasks in the first element of the vector, then the second, then the third, ...
   if unsuccessful, return #{'a} a set of the tasks that couldn't be run"
-  [tasks relations]
-  (loop [unordered-tasks tasks
+  [relations]
+  (loop [unordered-tasks (keys relations)
          ordered-tasks []
          result []]
     (if (empty? unordered-tasks)
@@ -48,7 +46,7 @@
 
 (defn validate-tasks
   "Validates that the tasks have been ordered correctly"
-  [[tasks relations ordered-tasks]]
+  [tasks relations ordered-tasks]
   (first
     (reduce (fn [[is-valid remaining-tasks] next-task-set]
               (if is-valid
@@ -66,21 +64,12 @@
 
 
 (spec/fdef order-tasks
-           :args (fn [args]
-                   (and
-                     (set? (first args))
-                     (spec/conform (spec/every-kv
-                                     (partial contains? (first args))
-                                     #(set/subset? % (first args))) (second args))))
-           ; FIXME Can't figure out why ret doesn't do anything regardless of what
-           ; you put in it. fn doesn't work either, probably because :ret doesn't
+           :args (fn [[relations]]
+                   (set/subset? (set (flatten (vals relations))) (set (keys relations))))
            :ret (spec/or :failure set? :success (spec/and vector? (spec/every set?)))
            :fn #(let [[tasks relations] (:args %)
                       ordered-tasks (val (:ret %))
                       in-tasks (fn [s] (set/subset? s tasks))]
                   (case (key (:ret %))
                     :failure (spec/conform in-tasks ordered-tasks)
-                    :success (spec/conform validate-tasks [tasks relations ordered-tasks]))))
-
-
-(stest/instrument `order-tasks)
+                    :success (validate-tasks tasks relations ordered-tasks))))
