@@ -4,13 +4,7 @@
 (defn diff
   "If B is made of a permutaton of letters of A plus one additional character, returns that extra character"
   [A B]
-  (let [a-occurence
-        (reduce
-         (fn [acc-map next-letter]
-           (let [letter-occurence (inc (get acc-map next-letter 0))]
-             (assoc acc-map next-letter letter-occurence)))
-         {}
-         (seq A))
+  (let [a-occurence (frequencies A)
         extra-letter
         (reduce
          (fn [b-acc-map next-letter] (let [b-letter-occurence (inc (get b-acc-map next-letter 0))
